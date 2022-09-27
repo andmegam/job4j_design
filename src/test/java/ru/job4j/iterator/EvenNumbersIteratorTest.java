@@ -13,7 +13,7 @@ class EvenNumbersIteratorTest {
 
     @BeforeEach
     public void setUp() {
-        it = new EvenNumbersIterator(new int[]{1, 3, 2, 3, 5, 5, 4, 5, 6, 7});
+        it = new EvenNumbersIterator(new int[]{-11, 3, 2, 3, 5, 5, 4, 5, 6, 7});
     }
 
     @Test
