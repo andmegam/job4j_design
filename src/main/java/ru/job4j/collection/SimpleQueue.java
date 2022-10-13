@@ -7,15 +7,15 @@ public class SimpleQueue<T> {
     private final SimpleStack<T> out = new SimpleStack<>();
 
     public T poll() {
-        if (in.isEmpty()) {
+        if (in.isEmpty() && out.isEmpty()) {
             throw new NoSuchElementException();
         }
-
         if (out.isEmpty()) {
             while (!in.isEmpty()) {
                 out.push(in.pop());
             }
         }
+
         return out.pop();
     }
 
