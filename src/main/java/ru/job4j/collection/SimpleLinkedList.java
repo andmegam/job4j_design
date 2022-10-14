@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class SimpleLinkedList<E> implements LinkedList<E> {
     private int size;
-    int modCount;
+    private int modCount;
     private Node<E> first;
     private Node<E> last;
 
