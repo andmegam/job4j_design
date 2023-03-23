@@ -14,13 +14,13 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        if (count >= this.table.length * LOAD_FACTOR) {
+        if (count >= table.length * LOAD_FACTOR) {
             expand();
         }
         boolean rsl = false;
-        int index = indexFor(hash(key));
-        if (this.table[index] == null) {
-            this.table[index] = new MapEntry<>(key, value);
+        int index = indexFor(key);
+        if (table[index] == null) {
+            table[index] = new MapEntry<>(key, value);
             rsl = true;
             count++;
             modCount++;
@@ -33,42 +33,48 @@ public class SimpleMap<K, V> implements Map<K, V> {
         return hashCode ^ (hashCode >>> 16);
     }
 
-    private int indexFor(int hash) {
-        return (capacity - 1) & hash;
+    private int indexFor(K key) {
+        return (capacity - 1) & hash(key);
     }
 
     private void expand() {
         capacity *= 2;
         MapEntry<K, V>[] newTable = new MapEntry[capacity];
-        for (MapEntry<K, V> kvMapEntry : this.table) {
+        for (MapEntry<K, V> kvMapEntry : table) {
             if (kvMapEntry != null) {
-                int index = indexFor(hash(kvMapEntry.key));
+                int index = indexFor(kvMapEntry.key);
                 if (newTable[index] == null) {
                     newTable[index] = kvMapEntry;
                 }
             }
         }
-        this.table = newTable;
+        table = newTable;
     }
 
     @Override
     public V get(K key) {
         V value = null;
-        int index = indexFor(hash(key));
-        if (this.table[index] != null) {
-            if (hash(this.table[index].key) == hash(key) && Objects.equals(this.table[index].key, key)) {
-                value = this.table[index].value;
+        int index = indexFor(key);
+        if (table[index] != null) {
+            if (isEqualsHashCode(table[index].key, key) && Objects.equals(table[index].key, key)) {
+                value = table[index].value;
             }
         }
         return value;
     }
 
+    private boolean isEqualsHashCode(K key1, K key2) {
+        int code1 = key1 == null ? 0 : key1.hashCode();
+        int code2 = key2 == null ? 0 : key2.hashCode();
+        return code1 == code2;
+    }
+
     @Override
     public boolean remove(K key) {
         boolean rsl = false;
-        int index = indexFor(hash(key));
-        if (this.table[index] != null && hash(this.table[index].key) == hash(key) && Objects.equals(this.table[index].key, key)) {
-            this.table[index] = null;
+        int index = indexFor(key);
+        if (table[index] != null && isEqualsHashCode(table[index].key, key) && Objects.equals(table[index].key, key)) {
+            table[index] = null;
             rsl = true;
             count--;
             modCount++;
