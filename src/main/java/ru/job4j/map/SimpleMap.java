@@ -56,24 +56,24 @@ public class SimpleMap<K, V> implements Map<K, V> {
         V value = null;
         int index = indexFor(key);
         if (table[index] != null) {
-            if (isEqualsHashCode(table[index].key, key) && Objects.equals(table[index].key, key)) {
+            if (isEqualsKey(table[index].key, key)) {
                 value = table[index].value;
             }
         }
         return value;
     }
 
-    private boolean isEqualsHashCode(K key1, K key2) {
+    private boolean isEqualsKey(K key1, K key2) {
         int code1 = key1 == null ? 0 : key1.hashCode();
         int code2 = key2 == null ? 0 : key2.hashCode();
-        return code1 == code2;
+        return (code1 == code2) && Objects.equals(key1, key2);
     }
 
     @Override
     public boolean remove(K key) {
         boolean rsl = false;
         int index = indexFor(key);
-        if (table[index] != null && isEqualsHashCode(table[index].key, key) && Objects.equals(table[index].key, key)) {
+        if (table[index] != null && isEqualsKey(table[index].key, key)) {
             table[index] = null;
             rsl = true;
             count--;
